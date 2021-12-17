@@ -24,7 +24,7 @@ const init = async (db) => {
     
     app.get('/user/:username', async (req, res) => {
         console.time('user');
-        const envios_user = await db.collection('envios').find({user: req.params.username}, {projection: { _id: 0 }}).toArray();
+        const envios_user = await db.collection('envios').find({user: req.params.username}, {projection: { _id: 0 }, sort: { fecha: 1 }}).toArray();
         console.timeEnd('user');
         res.json(envios_user);
     });
