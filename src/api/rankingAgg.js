@@ -33,7 +33,6 @@ const ranking_agg = [
     }
 ];
 
-const sort = {'num_envio': -1};
 const projection = {'_id': false};
 
 const getRanking = async (db) => {
@@ -46,11 +45,10 @@ const getRanking = async (db) => {
         await db.collection('ranking_db').deleteMany({});
         await db.collection('ranking_db').insertMany(ranking);
         await db.collection('last_ranking_update').deleteMany({});
-        await db.collection('last_ranking_update').insert({date: curr_date});
-        return ranking.map(elem => {
-            const { _id, ...rest } = elem;
-            return rest;
-        });
+        await db.collection('last_ranking_update').insertOne({date: curr_date});
+        
+        //Removes the mongodb id from all elements
+        return ranking.map(elem => ({ _id, ...rest } = elem, rest));
     }
 }
 
