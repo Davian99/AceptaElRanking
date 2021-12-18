@@ -1,10 +1,8 @@
-const env = require('dotenv').config();
-const express = require('express')
-const { MongoClient } = require('mongodb');
-const { ranking_agg, getRanking } = require('./rankingAgg');
-const {generateTableFromArr, getTableFromArray} = require('./generateTable');
-const fs = require('fs');
-const { time } = require('console');
+const env                   = require('dotenv').config();
+const express               = require('express')
+const { MongoClient }       = require('mongodb');
+const { getRanking }        = require('./src/api/rankingAgg');
+const { getTableFromArray } = require('./src/generateTable');
 
 const url = process.env.LOCAL_DB_URL || `mongodb+srv://admin:${process.env.ATLAS_PWD}@cluster0.7gleu.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
@@ -44,7 +42,7 @@ const init = async (db) => {
     });
 
     app.get('/table', async (req, res) => {
-        const ranking = await db.collection('envios').aggregate(ranking_agg).toArray();
+        const ranking = await getRanking(db);
         const html = getTableFromArray(ranking);
         res.send(html);
     });
@@ -52,6 +50,6 @@ const init = async (db) => {
 
 const main = async () => {
     const [client, db] = await connectDB('acepta_el_ranking');
-    init(db); 
+    init(db);
 };
 main()

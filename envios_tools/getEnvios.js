@@ -1,6 +1,6 @@
 const fetch = require('isomorphic-fetch');
 const fs = require('fs');
-const {parseEnvio} = require('./parsers');
+const { parseEnvio } = require('./parsers');
 const { MongoClient } = require('mongodb');
 
 const url = 'mongodb://localhost:27017';
@@ -20,7 +20,6 @@ const fetchEnvio = n_envio => {
         "mode": "cors"
     }).then(res => res.text())
 }
-
 
 const getStoreEnvio = async (num_envio, db) => {
     console.log(num_envio)
