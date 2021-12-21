@@ -27,23 +27,33 @@ const parseNormal = root => ({
 const parseDate = date => {
   const [year, month, day, hour, minute, second] = [
     date.slice(6, 10), date.slice(3, 5), date.slice(0, 2), date.slice(12, 14), date.slice(15, 17), date.slice(18, 20)];
-  return new Date(Date.UTC(year, month - 1, day, hour, minute, second)).getTime();
+  return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+  //return new Date(Date.UTC(year, month - 1, day, hour, minute, second)).getTime();
 }
+
+const error_codes = {
+  'existe': 401,
+  'encontrado': 201,
+  undefined: 200,
+};
 
 const parseEnvio = envio => {
   const root = HTMLParser.parse(envio);
+  const error_text = root.querySelector('.alert')?.childNodes[4].text.split(' ').at(-1);
   const is_ie = root.querySelector('#submissionVerdictGroup');
   const envio_data = is_ie ? parseIE(root) : parseNormal(root);
   return {
-    ...envio_data,
-    num_envio: envio_data.num_envio && Number(envio_data.num_envio),
-    fecha: envio_data.fecha && parseDate(envio_data.fecha),
-    problem: envio_data.problem && Number(envio_data.problem),
-    time: envio_data.time && parseFloat(envio_data.time),
-    memory: envio_data.memory && Number(envio_data.memory),
-    position: envio_data.position && Number(envio_data.position),
+    data: {
+      ...envio_data,
+      num_envio: envio_data.num_envio && Number(envio_data.num_envio),
+      fecha: envio_data.fecha && parseDate(envio_data.fecha),
+      problem: envio_data.problem && Number(envio_data.problem),
+      time: envio_data.time && parseFloat(envio_data.time),
+      memory: envio_data.memory && Number(envio_data.memory),
+      position: envio_data.position && Number(envio_data.position),
+    },
+    status: error_codes[error_text],
   };
-  return envio_data;
 }
  
 module.exports = {
