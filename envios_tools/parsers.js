@@ -38,10 +38,15 @@ const error_codes = {
 };
 
 const parseEnvio = envio => {
+  console.log('Before html');
   const root = HTMLParser.parse(envio);
+  console.log('Before error');
   const error_text = root.querySelector('.alert')?.childNodes[4].text.split(' ').at(-1);
+  console.log('Before is ie');
   const is_ie = root.querySelector('#submissionVerdictGroup');
+  console.log('Before parsing');
   const envio_data = is_ie ? parseIE(root) : parseNormal(root);
+  console.log('Before returning');
   return {
     data: {
       ...envio_data,
