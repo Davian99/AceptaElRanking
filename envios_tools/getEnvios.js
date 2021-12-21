@@ -20,11 +20,8 @@ const fetchEnvio = n_envio => {
 }
 
 const getStoreEnvio = async (num_envio, db) => {
-  console.log('Before fetching');
   const envio = await fetchEnvio(num_envio);
-  console.log('Before parse');
   const {data, status} = parseEnvio(envio);
-  console.log('After parse');
 
   //Only store when is a new envio and is not in queue
   if (status !== 201 && data.veredict != 'IQ' && data.num_envio != null)
@@ -33,11 +30,8 @@ const getStoreEnvio = async (num_envio, db) => {
 };
 
 const getEnvio = async (num_envio) => {
-  console.log('Before fetching');
   const envio = await fetchEnvio(num_envio);
-  console.log('Before parse');
   const {data} = parseEnvio(envio);
-  console.log('After parse');
   return data;
 };
 
