@@ -58,7 +58,7 @@ const init = async (db) => {
 
 const main = async () => {
   //Background fetch envios
-  //getEnvios();
+  getEnvios();
   const [client, db] = await connectDB('acepta_el_ranking');
   init(db);
 };
