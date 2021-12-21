@@ -1,9 +1,12 @@
+const env = require('dotenv').config();
 const fetch = require('isomorphic-fetch');
 const fs = require('fs');
+const cron = require('node-cron');
 const { parseEnvio } = require('./parsers');
 const { MongoClient } = require('mongodb');
+const { storeEnvio } = require('./storeEnvios');
 
-const url = 'mongodb://localhost:27017';
+const url = process.env.LOCAL_DB_URL || `mongodb+srv://admin:${process.env.ATLAS_PWD}@cluster0.7gleu.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
 const connectDB = async (db_name) => {
   const client = new MongoClient(url);
@@ -22,27 +25,50 @@ const fetchEnvio = n_envio => {
 }
 
 const getStoreEnvio = async (num_envio, db) => {
-  console.log(num_envio)
   const envio = await fetchEnvio(num_envio);
-  const data = parseEnvio(envio);
-  console.log(data);
+  const {data, status} = parseEnvio(envio);
+
+  //Only store when is a new envio and is not in queue
+  if (status !== 201 && data.veredict != 'IQ' && data.num_envio != null)
+    await storeEnvio(data, db);
+  return status !== 201 && data.veredict != 'IQ';
 };
 
-const getAll = async (ini, n, db) => {
-  const data = await Promise.all([...Array(n).keys()]
-    .map(elem => elem + ini)
-    .map(envio => fetchEnvio(envio)
-      .then(fetched => parseEnvio(fetched))
-    ));
-  console.log(data);
+const projection = {
+  'num_envio': 1, 
+  '_id': 0
 };
 
-const main = async () => {
-  console.time('main');
+let executing = false;
+
+const getAll = async (db) => {
+  executing = true;
+  let last = (await db.findOne({}, { projection: projection, sort: {'num_envio': -1} }))?.num_envio;
+  if (last == null)
+    last = 0;
+  last++;
+  console.log(`[FETCHER][START] Started fetching session with ${last}`);
+  while (await getStoreEnvio(last, db)){
+    if (last % 100 === 0)
+      console.log(`[FETCHER][INFO] Fetching ${last}`);
+    last++;
+  }
+  executing = false;
+  console.log(`[FETCHER][END] Ended fetching session with ${last}`);
+  return last;
+};
+
+const getEnvios = async () => {
   const [client, db] = await connectDB('acepta_el_ranking');
   const envios_collection = db.collection('envios');
-  await getStoreEnvio(484);
-  console.timeEnd('main');
-  client.close();
+
+  var task = cron.schedule('*/5 * * * * *', async () =>  {
+    if (executing)
+      return;
+    await getAll(envios_collection);
+  });
 }
-main();
+
+module.exports = {
+  getEnvios,
+};

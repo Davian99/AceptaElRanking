@@ -10,6 +10,10 @@ const connectDB = async (db_name) => {
   return [client, db];
 }; 
 
+const storeEnvio = async (envio, db) => {
+  await db.insertOne(envio);
+}
+
 const main = async () => {
   const [client, db] = await connectDB('acepta_el_ranking');
   const envios_collection = db.collection('envios');
@@ -32,4 +36,7 @@ const main = async () => {
   
   client.close();
 }
-main();
+
+module.exports = {
+  storeEnvio,
+};

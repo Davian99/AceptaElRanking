@@ -1,8 +1,9 @@
 const env                   = require('dotenv').config();
 const express               = require('express')
 const { MongoClient }       = require('mongodb');
-const { getRanking }        = require('./src/api/rankingAgg');
+const { getRanking }        = require('./src/api/ranking');
 const { getTableFromArray } = require('./src/generateTable');
+const { getEnvios }         = require('./envios_tools/getEnvios');
 
 const url = process.env.LOCAL_DB_URL || `mongodb+srv://admin:${process.env.ATLAS_PWD}@cluster0.7gleu.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
@@ -49,6 +50,8 @@ const init = async (db) => {
 }
 
 const main = async () => {
+  //Background fetch envios
+  getEnvios();
   const [client, db] = await connectDB('acepta_el_ranking');
   init(db);
 };
