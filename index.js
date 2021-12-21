@@ -3,7 +3,7 @@ const express               = require('express')
 const { MongoClient }       = require('mongodb');
 const { getRanking }        = require('./src/api/ranking');
 const { getTableFromArray } = require('./src/generateTable');
-const { getEnvios }         = require('./envios_tools/getEnvios');
+const { getEnvios, getEnvio }         = require('./envios_tools/getEnvios');
 
 const url = process.env.LOCAL_DB_URL || `mongodb+srv://admin:${process.env.ATLAS_PWD}@cluster0.7gleu.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
@@ -35,6 +35,13 @@ const init = async (db) => {
     res.json(envio);
   });
 
+  app.get('/get/:num_envio', async (req, res) => {
+    console.time('envio');
+    const envio = await getEnvio(Number(req.params.num_envio));
+    console.timeEnd('envio');
+    res.json(envio);
+  });
+
   app.get('/ranking', async (req, res) => {
     console.time('ranking');
     const ranking = await getRanking(db);
@@ -51,7 +58,7 @@ const init = async (db) => {
 
 const main = async () => {
   //Background fetch envios
-  getEnvios();
+  //getEnvios();
   const [client, db] = await connectDB('acepta_el_ranking');
   init(db);
 };

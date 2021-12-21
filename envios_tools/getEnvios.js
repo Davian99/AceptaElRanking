@@ -32,6 +32,15 @@ const getStoreEnvio = async (num_envio, db) => {
   return status !== 201 && data.veredict != 'IQ';
 };
 
+const getEnvio = async (num_envio) => {
+  console.log('Before fetching');
+  const envio = await fetchEnvio(num_envio);
+  console.log('Before parse');
+  const {data} = parseEnvio(envio);
+  console.log('After parse');
+  return data;
+};
+
 const projection = {
   'num_envio': 1, 
   '_id': 0
@@ -69,4 +78,5 @@ const getEnvios = async () => {
 
 module.exports = {
   getEnvios,
+  getEnvio,
 };
