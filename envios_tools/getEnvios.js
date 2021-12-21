@@ -16,17 +16,15 @@ const connectDB = async (db_name) => {
 }; 
 
 const fetchEnvio = n_envio => {
-  return fetch(`https://www.aceptaelreto.com/user/submission.php?id=${n_envio}`, {
-    "credentials": "include",
-    "referrer": "https://www.aceptaelreto.com/user/lastsubmissions.php",
-    "method": "GET",
-    "mode": "cors"
-  }).then(res => res.text())
+  return fetch(`https://www.aceptaelreto.com/user/submission.php?id=${n_envio}`).then(res => res.text());
 }
 
 const getStoreEnvio = async (num_envio, db) => {
+  console.log('Before fetching');
   const envio = await fetchEnvio(num_envio);
+  console.log('Before parse');
   const {data, status} = parseEnvio(envio);
+  console.log('After parse');
 
   //Only store when is a new envio and is not in queue
   if (status !== 201 && data.veredict != 'IQ' && data.num_envio != null)
