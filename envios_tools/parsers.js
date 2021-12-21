@@ -46,15 +46,15 @@ const parseEnvio = envio => {
   const is_ie = root.querySelector('#submissionVerdictGroup');
   console.log('Before parsing', is_ie);
 
-  console.log(root.querySelector('.col-md-10 > h1:nth-child(1)')?.text.split(' ')[1]);
-  console.log(root.querySelector('.col-md-10 > h2:nth-child(2)')?.text.split(' ')[1]);
-  console.log(root.querySelector('.form-horizontal > div:nth-child(1) > div:nth-child(2) > p:nth-child(1)')?.text);
-  console.log(root.querySelector('div.form-group:nth-child(2) > div:nth-child(2) > p:nth-child(1)')?.text);
-  console.log(root.querySelector('div.form-group:nth-child(4) > div:nth-child(2) > p:nth-child(1)')?.text);
-  console.log(root.querySelector('div.form-group:nth-child(5) > div:nth-child(2) > p:nth-child(1) > a:nth-child(1)')?.text.split(' ').at(-1).slice(1, -1));
-  console.log(root.querySelector('div.form-group:nth-child(6) > div:nth-child(2) > p:nth-child(1)')?.text.split(' ')[0]);
-  console.log(root.querySelector('div.form-group:nth-child(7) > div:nth-child(2) > p:nth-child(1)')?.text.split(' ')[0]);
-  console.log(root.querySelector('div.form-group:nth-child(8) > div:nth-child(2) > p:nth-child(1)')?.text.split(' ')[0]);
+  console.log(root.querySelector('.col-md-10 > h1:nth-child(1)')?.textContent.split(' ')[1]);
+  console.log(root.querySelector('.col-md-10 > h2:nth-child(2)')?.textContent.split(' ')[1]);
+  console.log(root.querySelector('.form-horizontal > div:nth-child(1) > div:nth-child(2) > p:nth-child(1)')?.textContent);
+  console.log(root.querySelector('div.form-group:nth-child(2) > div:nth-child(2) > p:nth-child(1)')?.textContent);
+  console.log(root.querySelector('div.form-group:nth-child(4) > div:nth-child(2) > p:nth-child(1)')?.textContent);
+  console.log(root.querySelector('div.form-group:nth-child(5) > div:nth-child(2) > p:nth-child(1) > a:nth-child(1)')?.textContent.split(' ').at(-1).slice(1, -1));
+  console.log(root.querySelector('div.form-group:nth-child(6) > div:nth-child(2) > p:nth-child(1)')?.textContent.split(' ')[0]);
+  console.log(root.querySelector('div.form-group:nth-child(7) > div:nth-child(2) > p:nth-child(1)')?.textContent.split(' ')[0]);
+  console.log(root.querySelector('div.form-group:nth-child(8) > div:nth-child(2) > p:nth-child(1)')?.textContent.split(' ')[0]);
 
   const envio_data = is_ie ? parseIE(root) : parseNormal(root);
   console.log('Before returning');

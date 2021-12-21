@@ -1,4 +1,10 @@
 {
+  "name": "AceptaElRanking",
+  "version": "0.0.0",
+  "private": true,
+  "engines": {
+    "node": "16.11"
+  },
   "dependencies": {
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
