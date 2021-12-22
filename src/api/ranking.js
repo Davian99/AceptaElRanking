@@ -40,8 +40,12 @@ const deleteID = (elem) => {
 
 const projection = {'_id': false};
 
-const getRanking = async (db) => {
+const getRankingCache = async (db) => {
   return db.collection('ranking_db').find({}, { projection: projection }).toArray();
+};
+
+const getRanking = async (db) => {
+  return db.collection('envios').aggregate(ranking_agg).toArray();
 };
 
 const updateRanking = async (db) => {

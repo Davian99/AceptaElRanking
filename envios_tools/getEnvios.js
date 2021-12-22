@@ -63,7 +63,8 @@ const getEnvios = async () => {
   const [client, db] = await connectDB('acepta_el_ranking');
   const envios_collection = db.collection('envios');
 
-  var task = cron.schedule('*/5 * * * * *', async () =>  {
+  //Run crawler every minute
+  var task = cron.schedule('* * * * *', async () =>  {
     if (executing)
       return;
     await getAll(envios_collection);
